@@ -38,9 +38,7 @@ export function LoginPage() {
         {busy ? 'Redirecting…' : 'Sign in with BrightGrid'}
       </button>
       <p className="muted login-hint">
-        You will sign in on CCIDP at{' '}
-        <span className="mono">{`http://${window.location.hostname}:8080/ccidp/login`}</span>. MFA
-        runs there if it is enabled for your account.
+        You will sign in on BrightGrid CCIDP. MFA runs there if it is enabled for your account.
       </p>
     </AuthCard>
   );
