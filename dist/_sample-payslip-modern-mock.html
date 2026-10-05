@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>BrightGrid Salary Slip Sample</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: #e5e5e5;
+      font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page {
+      width: 1123px;
+      height: 794px;
+      display: flex;
+      background: #f4f4f2;
+      overflow: hidden;
+      position: relative;
+    }
+    .sidebar {
+      width: 200px;
+      background: #0a0a0a;
+      color: #fff;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 36px 28px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 50%;
+      left: -140px;
+      bottom: -80px;
+    }
+    .sidebar::after {
+      content: '';
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 50%;
+      left: -70px;
+      bottom: -10px;
+    }
+    .brand {
+      position: relative;
+      z-index: 2;
+    }
+    .mark {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 12px;
+      border: none;
+      background: #fff;
+    }
+    .company-name {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+    .company-loc {
+      margin-top: 6px;
+      font-size: 9px;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.04em;
+      line-height: 1.4;
+    }
+    .vertical-title {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      bottom: 56px;
+      transform: translateX(-50%) rotate(-90deg);
+      transform-origin: center center;
+      white-space: nowrap;
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1;
+    }
+    .main {
+      flex: 1;
+      padding: 48px 56px 40px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+    }
+    .label {
+      font-size: 11px;
+      color: #8a8a8a;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .emp-name {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #111;
+      line-height: 1.15;
+    }
+    .emp-id, .meta-line {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #333;
+    }
+    .meta-line span { color: #666; }
+    .period-block { text-align: right; }
+    .period-value, .pay-date-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111;
+      letter-spacing: 0.02em;
+    }
+    .pay-date-value { font-size: 14px; margin-top: 2px; }
+    .dots {
+      width: 48px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      align-self: center;
+      margin: 0 8px;
+      flex-shrink: 0;
+    }
+    .dots span {
+      width: 5px;
+      height: 5px;
+      background: #c5c5c5;
+      border-radius: 50%;
+      display: block;
+    }
+    .section-head {
+      display: flex;
+      gap: 48px;
+      margin-top: 48px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid #1a1a1a;
+    }
+    .section-head h2 {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .cols {
+      display: flex;
+      gap: 48px;
+      margin-top: 8px;
+      flex: 1;
+    }
+    .col { flex: 1; }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 14px 0;
+      border-bottom: 1px solid #e0e0dc;
+      font-size: 14px;
+      color: #222;
+    }
+    .row .amt {
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 28px;
+      padding-top: 8px;
+      gap: 24px;
+    }
+    .totals .t-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 48px;
+      padding: 6px 0;
+      font-size: 14px;
+      min-width: 280px;
+    }
+    .totals .t-row strong { font-weight: 700; }
+    .net-block { text-align: right; }
+    .net-label {
+      font-size: 14px;
+      color: #8a8a8a;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .net-amount {
+      font-size: 42px;
+      font-weight: 700;
+      color: #0a0a0a;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .footer {
+      margin-top: 36px;
+      padding-top: 16px;
+      border-top: 1px solid #d0d0cc;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="slip">
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="mark" src="/branding/brightgrid-logo.png" alt="BrightGrid" width="42" height="42" />
+        <div class="company-name">BrightGrid<br>Technologies LLP</div>
+        <div class="company-loc">Bengaluru, Karnataka<br>India</div>
+      </div>
+      <div class="vertical-title">SALARY SLIP</div>
+    </aside>
+    <main class="main">
+      <div class="top">
+        <div class="emp">
+          <div class="label">Employee Name:</div>
+          <div class="emp-name">K Harshitha</div>
+          <div class="emp-id">Employee ID: BGT030</div>
+          <div class="meta-line"><span>Designation:</span> Engineer (Firmware)</div>
+          <div class="meta-line"><span>UAN:</span> 102237092944</div>
+        </div>
+        <div class="dots" aria-hidden="true">
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+        <div class="period-block">
+          <div class="label">Pay Period:</div>
+          <div class="period-value">AUG 01 – 31, 2026</div>
+          <div class="label" style="margin-top:14px">Payment Date:</div>
+          <div class="pay-date-value">01-SEP-2026</div>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <h2>Earnings</h2>
+        <h2>Deductions</h2>
+      </div>
+      <div class="cols">
+        <div class="col">
+          <div class="row"><span>Basic Salary</span><span class="amt">₹12,837.00</span></div>
+          <div class="row"><span>Retention Allow</span><span class="amt">₹1,426.00</span></div>
+          <div class="row"><span>HRA</span><span class="amt">₹5,705.00</span></div>
+          <div class="row"><span>Flexi Benefits</span><span class="amt">₹3,518.00</span></div>
+        </div>
+        <div class="col">
+          <div class="row"><span>PF</span><span class="amt">₹1,711.00</span></div>
+          <div class="row"><span>Canteen</span><span class="amt">₹420.00</span></div>
+          <div class="row"><span>PT</span><span class="amt">₹200.00</span></div>
+          <div class="row"><span>TDS</span><span class="amt">₹0.00</span></div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="totals">
+          <div class="t-row"><span>Total Earnings:</span><strong>₹23,488.00</strong></div>
+          <div class="t-row"><span>Total Deductions:</span><strong>₹2,331.00</strong></div>
+        </div>
+        <div class="dots" aria-hidden="true" style="align-self:center">
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+        <div class="net-block">
+          <div class="net-label">Net Salary</div>
+          <div class="net-amount">₹21,156.00</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Bank Transfer · BrightGrid Technologies LLP</span>
+        <span>Bengaluru, Karnataka | brightgrid.tech</span>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
