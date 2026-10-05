@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { api, extractError } from '../api/client';
 import { getStoredTheme } from '../theme/theme';
+import { hasSignedInIdentity } from '../utils/format';
 import { authorizeUrl, createPkce } from '../utils/pkce';
 
 const AuthContext = createContext(null);
@@ -22,6 +23,22 @@ function clearPkce() {
   localStorage.removeItem(PKCE_KEY);
 }
 
+function acceptUser(me) {
+  return hasSignedInIdentity(me) ? me : null;
+}
+
+/** Drop an ERP cookie that is not a real person, without following CCIDP logout. */
+async function dropUnsignedSession() {
+  try {
+    await api(
+      `/api/auth/logout?origin=${encodeURIComponent(window.location.origin)}&postLogoutRedirectUri=${encodeURIComponent(`${window.location.origin}/login`)}`,
+      { method: 'POST' }
+    );
+  } catch {
+    // Cookie may already be gone.
+  }
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [ready, setReady] = useState(false);
@@ -31,8 +48,12 @@ export function AuthProvider({ children }) {
     const timer = window.setTimeout(() => controller.abort(), 4000);
     try {
       const me = await api('/api/me', { signal: controller.signal });
-      setUser(me);
-      return me;
+      const signedIn = acceptUser(me);
+      setUser(signedIn);
+      if (!signedIn && me && typeof me === 'object') {
+        await dropUnsignedSession();
+      }
+      return signedIn;
     } catch (error) {
       setUser(null);
       if (error.status !== 401 && error.name !== 'AbortError') {
@@ -100,16 +121,25 @@ export function AuthProvider({ children }) {
             redirectUri: stored.redirectUri,
           }),
         });
+        const signedIn = acceptUser(me);
+        if (!signedIn) {
+          await dropUnsignedSession();
+          throw new Error('Sign-in did not include your name. Start again from BrightGrid ERP.');
+        }
         clearPkce();
-        setUser(me);
-        return me;
+        setUser(signedIn);
+        return signedIn;
       } catch (error) {
         try {
           const me = await api('/api/me');
-          if (me) {
+          const signedIn = acceptUser(me);
+          if (signedIn) {
             clearPkce();
-            setUser(me);
-            return me;
+            setUser(signedIn);
+            return signedIn;
+          }
+          if (me && typeof me === 'object') {
+            await dropUnsignedSession();
           }
         } catch {
           // first attempt did not create a session

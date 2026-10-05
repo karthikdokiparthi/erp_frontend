@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { extractError, useAuth } from '../auth/AuthContext';
+import { hasSignedInIdentity } from '../utils/format';
 import { AuthCard } from '../components/AuthCard';
 
 export function LoginPage() {
@@ -11,7 +12,7 @@ export function LoginPage() {
   const fromPath = location.state?.from?.pathname;
   const from = fromPath && fromPath.startsWith('/') && fromPath !== '/login' ? fromPath : '/';
 
-  if (ready && user) {
+  if (ready && hasSignedInIdentity(user)) {
     return <Navigate to={from} replace />;
   }
 

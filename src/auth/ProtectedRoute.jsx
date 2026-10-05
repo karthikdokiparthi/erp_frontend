@@ -1,4 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom';
+import { hasSignedInIdentity } from '../utils/format';
 import { useAuth } from './AuthContext';
 
 export function ProtectedRoute({ children }) {
@@ -14,7 +15,7 @@ export function ProtectedRoute({ children }) {
     );
   }
 
-  if (!user) {
+  if (!hasSignedInIdentity(user)) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 

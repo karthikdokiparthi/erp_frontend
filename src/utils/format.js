@@ -1,7 +1,42 @@
+const ANONYMOUS_PRINCIPAL = /^(unknown|anonymous|anonymoususer)$/i;
+
+function text(value) {
+  return String(value || '').trim();
+}
+
+function isAnonymousPrincipal(value) {
+  const principal = text(value);
+  return !principal || ANONYMOUS_PRINCIPAL.test(principal);
+}
+
+/** Real OIDC display name. A missing or anonymous name is not a person. */
+export function resolvedDisplayName(user) {
+  if (!user || typeof user !== 'object') return '';
+  const direct = text(user.name || user.displayName);
+  if (direct && !isAnonymousPrincipal(direct)) return direct;
+  const combined = [user.givenName || user.given_name, user.familyName || user.family_name]
+    .map(text)
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+  if (combined && !isAnonymousPrincipal(combined)) return combined;
+  return '';
+}
+
+export function resolvedUsername(user) {
+  if (!user || typeof user !== 'object') return '';
+  const username = text(user.username || user.preferred_username || user.preferredUsername || user.userName);
+  if (isAnonymousPrincipal(username)) return '';
+  return username;
+}
+
+/** A 200 from /api/me is a session only when both principal and name are real. */
+export function hasSignedInIdentity(user) {
+  return Boolean(resolvedUsername(user) && resolvedDisplayName(user));
+}
+
 export function displayName(user) {
-  if (!user) return 'Unknown';
-  const name = user.name || [user.givenName, user.familyName].filter(Boolean).join(' ').trim();
-  return name || user.username || 'Unknown';
+  return resolvedDisplayName(user);
 }
 
 export function initials(user) {
