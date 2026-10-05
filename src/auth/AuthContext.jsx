@@ -7,6 +7,26 @@ import { authorizeUrl, createPkce } from '../utils/pkce';
 const AuthContext = createContext(null);
 const PKCE_KEY = 'erp.pkce';
 const inflightCallbacks = new Map();
+const configuredIssuer = String(import.meta.env.VITE_OAUTH_ISSUER || '').replace(/\/$/, '');
+
+function loginIssuer(configIssuer) {
+  return configuredIssuer || String(configIssuer || '').replace(/\/$/, '');
+}
+
+function withConfiguredIssuer(url) {
+  if (!configuredIssuer || !url) {
+    return url;
+  }
+  try {
+    const parsed = new URL(url);
+    const target = new URL(configuredIssuer);
+    parsed.protocol = target.protocol;
+    parsed.host = target.host;
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
 
 function readPkce() {
   return localStorage.getItem(PKCE_KEY) || sessionStorage.getItem(PKCE_KEY);
@@ -85,7 +105,7 @@ export function AuthProvider({ children }) {
     });
     window.location.assign(
       authorizeUrl({
-        issuer: config.issuer,
+        issuer: loginIssuer(config.issuer),
         clientId: config.clientId,
         redirectUri,
         scopes: config.scopes,
@@ -166,7 +186,7 @@ export function AuthProvider({ children }) {
       );
       setUser(null);
       if (result?.endSessionUrl) {
-        window.location.assign(result.endSessionUrl);
+        window.location.assign(withConfiguredIssuer(result.endSessionUrl));
         return;
       }
     } catch {
