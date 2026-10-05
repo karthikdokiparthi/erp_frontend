@@ -19,7 +19,7 @@ export async function waitForAttendanceSyncJob(jobId) {
     }
   }
   const error = new Error(
-    'Sync is still waiting for the office PC. The button is free again; the board updates when that program finishes.',
+    'Sync is still waiting. On a PC that is on the office network or VPN, run office-attendance-sync.ps1 in the backend folder. The board updates when that program uploads the punches.',
   );
   error.pending = true;
   throw error;

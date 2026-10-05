@@ -736,7 +736,7 @@ export function AttendancePage() {
       );
       if (isQueuedSync(run)) {
         setNotice(
-          `Sync queued for ${formatPeriodLabel(from, to)}. Waiting for the office PC to pull punches.`,
+          `Sync queued for ${formatPeriodLabel(from, to)}. A PC on the office network or VPN must be running the attendance link so it can read the local biometric server.`,
         );
         run = await waitForAttendanceSyncJob(run.id || run.jobId);
       }
