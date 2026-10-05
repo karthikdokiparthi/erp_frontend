@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { api, extractError } from '../api/client';
+import { api, apiUrl, extractError } from '../api/client';
 import { DataTable } from '../components/DataTable';
 import { KpiCard, StatusBadge } from '../components/KpiCard';
 import { PageHeader } from '../components/PageHeader';
@@ -1240,7 +1240,7 @@ export function CandidateDetailPage() {
   }
 
   async function downloadResume(resume) {
-    const response = await fetch(`/api/hr/recruitment/candidates/${id}/resumes/${resume.id}`, { credentials: 'include' });
+    const response = await fetch(apiUrl(`/api/hr/recruitment/candidates/${id}/resumes/${resume.id}`), { credentials: 'include' });
     if (!response.ok) {
       setError('Could not download that resume');
       return;

@@ -1,3 +1,5 @@
+import { apiUrl } from '../api/client';
+
 function Glyph({ name }) {
   const common = {
     viewBox: '0 0 24 24',
@@ -57,7 +59,7 @@ export function PayslipIconButton({ icon, label, href, className = '', ...rest }
   const iconNode = <Glyph name={icon} />;
   if (href) {
     return (
-      <a className={classes} href={href} title={label} aria-label={label} {...rest}>
+      <a className={classes} href={apiUrl(href)} title={label} aria-label={label} {...rest}>
         {iconNode}
       </a>
     );

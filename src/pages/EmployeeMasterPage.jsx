@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { api, extractError } from '../api/client';
+import { api, apiUrl, extractError } from '../api/client';
 import { StatusBadge } from '../components/KpiCard';
 import { PageHeader } from '../components/PageHeader';
 import { directoryLabel, formatMoney } from '../utils/format';
@@ -668,7 +668,7 @@ export function EmployeeMasterPage() {
 
   async function downloadFile(path, filename) {
     try {
-      const response = await fetch(path, { credentials: 'include' });
+      const response = await fetch(apiUrl(path), { credentials: 'include' });
       if (!response.ok) {
         const text = await response.text();
         throw new Error(text || `Download failed (${response.status})`);
@@ -713,7 +713,7 @@ export function EmployeeMasterPage() {
     ? (draft.firstName || draft.lastName ? displayPersonName(draft.firstName, draft.lastName) : 'New employee')
     : 'Employee details';
   const lockedIdentity = draft && draft.revealIdentity === false;
-  const photoSrc = photoPreview || draft?.personal?.photoUrl || '';
+  const photoSrc = photoPreview || apiUrl(draft?.personal?.photoUrl || '');
 
   return (
     <div className="emp-master-page">

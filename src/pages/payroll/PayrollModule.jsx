@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { api, extractError } from '../../api/client';
+import { api, apiUrl, extractError } from '../../api/client';
 import { useAuth } from '../../auth/AuthContext';
 import { DataTable } from '../../components/DataTable';
 import { PayslipIconButton } from '../../components/PayslipActionIcon';
@@ -1660,7 +1660,7 @@ export function PayrollProcessingPage() {
                 {detail.status === 'PROCESSED' ? 'Generate / regenerate slips' : 'Generate slips'}
               </button>
             ) : null}
-            <a className="btn" href={`/api/hr/payroll/runs/${detail.id}/export.xls`}>
+            <a className="btn" href={apiUrl(`/api/hr/payroll/runs/${detail.id}/export.xls`)}>
               Export Excel
             </a>
             <button

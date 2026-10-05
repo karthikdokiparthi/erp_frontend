@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom';
-import { api, extractError } from '../api/client';
+import { api, apiUrl, extractError } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { DataTable } from '../components/DataTable';
 import { KpiCard, StatusBadge } from '../components/KpiCard';
@@ -751,7 +751,7 @@ export function ExpenseDetailPage() {
   }
 
   async function downloadFile(attachment) {
-    const response = await fetch(`/api/hr/expenses/${id}/attachments/${attachment.id}`, { credentials: 'include' });
+    const response = await fetch(apiUrl(`/api/hr/expenses/${id}/attachments/${attachment.id}`), { credentials: 'include' });
     if (!response.ok) {
       setError('Could not download that file');
       return;

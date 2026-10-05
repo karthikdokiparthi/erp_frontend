@@ -1,3 +1,4 @@
+import { apiUrl } from '../api/client';
 import { assetTypeLabel, departmentLabel, formatInstalledOn } from './format';
 
 function escapeXml(value) {
@@ -69,7 +70,7 @@ export function parseContentDispositionFilename(header) {
 }
 
 export async function downloadBinaryFromUrl(path, fallbackFilename) {
-  const response = await fetch(path, { credentials: 'include' });
+  const response = await fetch(apiUrl(path), { credentials: 'include' });
   if (!response.ok) {
     let message = `Download failed (${response.status})`;
     try {

@@ -1,6 +1,21 @@
+/** Empty in local dev so the Vite proxy still serves /api. Production sets the Render origin. */
+export function apiUrl(path) {
+  if (typeof path !== 'string' || path.length === 0) {
+    return path;
+  }
+  if (/^(https?:|blob:|data:)/i.test(path)) {
+    return path;
+  }
+  const base = String(import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+  if (!base || !path.startsWith('/api')) {
+    return path;
+  }
+  return `${base}${path}`;
+}
+
 export async function api(path, options = {}) {
   const isForm = typeof FormData !== 'undefined' && options.body instanceof FormData;
-  const response = await fetch(path, {
+  const response = await fetch(apiUrl(path), {
     credentials: 'include',
     headers: {
       Accept: 'application/json',

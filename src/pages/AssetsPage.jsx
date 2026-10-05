@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { api, extractError } from '../api/client';
+import { api, apiUrl, extractError } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { AssetSticker, useAssetQr } from '../components/AssetSticker';
 import { DataTable } from '../components/DataTable';
@@ -297,7 +297,7 @@ export function AssetsPage() {
     if (!selected?.id || !selected.documentFileName) {
       return;
     }
-    const response = await fetch(`/api/assets/${selected.id}/document`, { credentials: 'include' });
+    const response = await fetch(apiUrl(`/api/assets/${selected.id}/document`), { credentials: 'include' });
     if (!response.ok) {
       setError('Could not download the document');
       return;

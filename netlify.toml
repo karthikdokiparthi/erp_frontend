@@ -1,0 +1,4 @@
+# Public API origin baked into the Vite production build. No secrets.
+# Local `npm run dev` leaves VITE_API_BASE_URL empty so the Vite proxy still handles /api.
+[build.environment]
+  VITE_API_BASE_URL = "https://erp-backend-mxey.onrender.com"
