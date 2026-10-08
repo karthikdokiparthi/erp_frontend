@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthContext';
 import { AssetsRoute } from './auth/AssetsRoute';
+import { AttendanceRoute } from './auth/AttendanceRoute';
 import { HrRoute } from './auth/HrRoute';
 import { SuperAdminRoute } from './auth/SuperAdminRoute';
 import { ProtectedRoute } from './auth/ProtectedRoute';
@@ -317,73 +318,73 @@ export default function App() {
               <Route
                 path="/hr/attendance"
                 element={
-                  <HrRoute>
+                  <AttendanceRoute>
                     <AttendanceDashboardPage />
-                  </HrRoute>
+                  </AttendanceRoute>
                 }
               />
               <Route
                 path="/hr/attendance/daily"
                 element={
-                  <HrRoute>
+                  <AttendanceRoute>
                     <AttendancePage />
-                  </HrRoute>
+                  </AttendanceRoute>
                 }
               />
               <Route
                 path="/hr/attendance/devices"
                 element={
-                  <HrRoute>
+                  <AttendanceRoute>
                     <BiometricDevicesPage />
-                  </HrRoute>
+                  </AttendanceRoute>
                 }
               />
               <Route
                 path="/hr/attendance/monthly"
                 element={
-                  <HrRoute>
+                  <AttendanceRoute>
                     <AttendancePage />
-                  </HrRoute>
+                  </AttendanceRoute>
                 }
               />
               <Route
                 path="/hr/attendance/shifts"
                 element={
-                  <HrRoute>
+                  <AttendanceRoute>
                     <ShiftManagementPage />
-                  </HrRoute>
+                  </AttendanceRoute>
                 }
               />
               <Route
                 path="/hr/attendance/late"
                 element={
-                  <HrRoute>
+                  <AttendanceRoute>
                     <InTimePage />
-                  </HrRoute>
+                  </AttendanceRoute>
                 }
               />
               <Route
                 path="/hr/attendance/early"
                 element={
-                  <HrRoute>
+                  <AttendanceRoute>
                     <EarlyLeavingPage />
-                  </HrRoute>
+                  </AttendanceRoute>
                 }
               />
               <Route
                 path="/hr/attendance/overtime"
                 element={
-                  <HrRoute>
+                  <AttendanceRoute>
                     <OvertimePage />
-                  </HrRoute>
+                  </AttendanceRoute>
                 }
               />
               <Route
                 path="/hr/attendance/regularization"
                 element={
-                  <HrRoute>
+                  <AttendanceRoute>
                     <RegularizationPage />
-                  </HrRoute>
+                  </AttendanceRoute>
                 }
               />
               <Route

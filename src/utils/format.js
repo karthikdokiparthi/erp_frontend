@@ -244,6 +244,19 @@ export function hasHrAccess(user) {
   return roles.includes('SUPER_ADMIN') || permissions.includes('ERP_HR_READ');
 }
 
+/** Attendance tab and attendance records. HR already includes this. */
+export function hasAttendanceAccess(user) {
+  if (!user) return false;
+  if (hasHrAccess(user)) return true;
+  const roles = user.roles || [];
+  const permissions = user.permissions || [];
+  return (
+    roles.includes('ATTENDANCE') ||
+    permissions.includes('ERP_ATTENDANCE_READ') ||
+    permissions.includes('ERP_ATTENDANCE_WRITE')
+  );
+}
+
 export function primaryRoleLabel(user) {
   if (!user) return 'User';
   if (hasSuperAdmin(user)) return 'Super Admin';

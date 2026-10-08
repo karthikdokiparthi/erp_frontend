@@ -5,7 +5,7 @@ import { BrandLockup } from '../components/BrandLockup';
 import { Icon } from '../components/Icons';
 import { NotificationBell } from '../components/NotificationBell';
 import { ThemeToggle } from '../components/ThemeToggle';
-import { displayName, hasAssetsAccess, hasHrAccess, hasSuperAdmin, initials, primaryRoleLabel } from '../utils/format';
+import { displayName, hasAssetsAccess, hasAttendanceAccess, hasHrAccess, hasSuperAdmin, initials, primaryRoleLabel } from '../utils/format';
 import { NavGroup, NavItem } from './NavGroup';
 import { moduleLabel, resolveModule } from './moduleTheme';
 
@@ -14,6 +14,7 @@ export function AppShell() {
   const location = useLocation();
   const [navOpen, setNavOpen] = useState(false);
   const hr = hasHrAccess(user);
+  const attendance = hasAttendanceAccess(user);
   const superAdmin = hasSuperAdmin(user);
   const assets = hasAssetsAccess(user);
   const moduleId = resolveModule(location.pathname);
@@ -56,39 +57,41 @@ export function AppShell() {
             My profile
           </NavItem>
           {hr ? (
-            <>
-              <NavGroup title="Employee Management" match={['/hr/employees', '/hr/people', '/hr/exit', '/hr/employee-master', '/hr/organization']}>
-                <NavItem to="/hr/employee-master">Employee Master</NavItem>
-                <NavItem to="/hr/employees">All employees</NavItem>
-                <NavItem to="/hr/employees/biometric">Biometric</NavItem>
-                <NavItem to="/hr/organization" end>
-                  Department Master
-                </NavItem>
-                <NavItem to="/hr/organization/designations">Designation Master</NavItem>
-                <NavItem to="/hr/organization/transfers">Transfers</NavItem>
-                <NavItem to="/hr/organization/promotions">Promotions</NavItem>
-                <NavItem to="/hr/exit">Exit / Resign</NavItem>
-              </NavGroup>
-              <NavGroup title="Attendance" match={['/hr/attendance', '/me/attendance']}>
-                <NavItem to="/me/attendance">My attendance</NavItem>
-                <NavItem to="/hr/attendance" end>
-                  Attendance dashboard
-                </NavItem>
-                <NavItem to="/hr/attendance/daily">Daily attendance</NavItem>
-                <NavItem to="/hr/attendance/monthly">Monthly attendance</NavItem>
-                <NavItem to="/hr/attendance/shifts">Shift management</NavItem>
-                <NavItem to="/hr/attendance/devices">Biometric devices</NavItem>
-                <NavItem to="/hr/attendance/late">In time</NavItem>
-                <NavItem to="/hr/attendance/early">Early leaving</NavItem>
-                <NavItem to="/hr/attendance/overtime">Overtime</NavItem>
-                <NavItem to="/hr/attendance/regularization">Regularization</NavItem>
-              </NavGroup>
-            </>
+            <NavGroup title="Employee Management" match={['/hr/employees', '/hr/people', '/hr/exit', '/hr/employee-master', '/hr/organization']}>
+              <NavItem to="/hr/employee-master">Employee Master</NavItem>
+              <NavItem to="/hr/employees">All employees</NavItem>
+              <NavItem to="/hr/employees/biometric">Biometric</NavItem>
+              <NavItem to="/hr/organization" end>
+                Department Master
+              </NavItem>
+              <NavItem to="/hr/organization/designations">Designation Master</NavItem>
+              <NavItem to="/hr/organization/transfers">Transfers</NavItem>
+              <NavItem to="/hr/organization/promotions">Promotions</NavItem>
+              <NavItem to="/hr/exit">Exit / Resign</NavItem>
+            </NavGroup>
+          ) : null}
+          {attendance ? (
+            <NavGroup title="Attendance" match={['/hr/attendance', '/me/attendance']}>
+              <NavItem to="/me/attendance">My attendance</NavItem>
+              <NavItem to="/hr/attendance" end>
+                Attendance dashboard
+              </NavItem>
+              <NavItem to="/hr/attendance/daily">Daily attendance</NavItem>
+              <NavItem to="/hr/attendance/monthly">Monthly attendance</NavItem>
+              <NavItem to="/hr/attendance/shifts">Shift management</NavItem>
+              <NavItem to="/hr/attendance/devices">Biometric devices</NavItem>
+              <NavItem to="/hr/attendance/late">In time</NavItem>
+              <NavItem to="/hr/attendance/early">Early leaving</NavItem>
+              <NavItem to="/hr/attendance/overtime">Overtime</NavItem>
+              <NavItem to="/hr/attendance/regularization">Regularization</NavItem>
+            </NavGroup>
           ) : (
+            <NavGroup title="Attendance" match={['/me/attendance']}>
+              <NavItem to="/me/attendance">My attendance</NavItem>
+            </NavGroup>
+          )}
+          {hr ? null : (
             <>
-              <NavGroup title="Attendance" match={['/me/attendance']}>
-                <NavItem to="/me/attendance">My attendance</NavItem>
-              </NavGroup>
               <NavGroup title="Leave Management" match={['/leave']}>
                 <NavItem to="/leave" end>
                   Leave dashboard

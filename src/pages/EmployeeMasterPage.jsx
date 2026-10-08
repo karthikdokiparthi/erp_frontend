@@ -205,8 +205,10 @@ function hydrate(profile) {
       probationEnd: dateOnly(employment.probationEnd),
       confirmationDate: dateOnly(employment.confirmationDate),
       dateOfLeaving: dateOnly(employment.dateOfLeaving),
-      departmentId: s(employment.departmentId),
-      designationId: s(employment.designationId),
+      departmentId: '',
+      designationId: '',
+      department: s(employment.department),
+      title: s(employment.title),
       reportingManagerId: s(employment.reportingManagerId),
       reportingManagerKind: s(employment.reportingManagerKind),
       hrManagerId: s(employment.hrManagerId),
@@ -306,8 +308,8 @@ function toPayload(draft) {
       hiredOn: nil(employment.hiredOn),
       employmentType: employment.employmentType,
       employmentStatus: employment.employmentStatus,
-      departmentId: nil(employment.departmentId),
-      designationId: nil(employment.designationId),
+      departmentId: null,
+      designationId: null,
       department: nil(employment.department),
       title: nil(employment.title),
       jobRole: nil(employment.jobRole),
@@ -395,7 +397,7 @@ export function EmployeeMasterPage() {
   const [photoPreview, setPhotoPreview] = useState('');
   const [docType, setDocType] = useState('RESUME');
   const [docTitle, setDocTitle] = useState('');
-  const [org, setOrg] = useState({ branches: [], departments: [], designations: [], shifts: [] });
+  const [org, setOrg] = useState({ branches: [], shifts: [] });
 
   async function loadList() {
     const data = await api('/api/hr/employee-master');
@@ -424,23 +426,13 @@ export function EmployeeMasterPage() {
       async function safe(path) {
         try { return await api(path); } catch { return null; }
       }
-      let [branches, departments, designations, shifts] = await Promise.all([
+      const [branches, shifts] = await Promise.all([
         safe('/api/hr/organization/branches'),
-        safe('/api/hr/organization/departments?activeOnly=true'),
-        safe('/api/hr/organization/designations'),
         safe('/api/hr/attendance/shifts'),
       ]);
-      if ((!departments || departments.length === 0)) {
-        try {
-          await api('/api/hr/organization/departments/ensure', { method: 'POST', body: '{}' });
-          departments = await api('/api/hr/organization/departments?activeOnly=true');
-        } catch { /* keep empty */ }
-      }
       if (!cancelled) {
         setOrg({
           branches: Array.isArray(branches) ? branches : [],
-          departments: Array.isArray(departments) ? departments : [],
-          designations: Array.isArray(designations) ? designations : [],
           shifts: Array.isArray(shifts?.shifts) ? shifts.shifts : [],
         });
       }
@@ -457,13 +449,6 @@ export function EmployeeMasterPage() {
       return name.includes(needle) || String(row.employeeNumber || '').toLowerCase().includes(needle);
     });
   }, [rows, query, statusFilter]);
-
-  const designations = useMemo(() => {
-    const all = org.designations || [];
-    const deptId = draft?.employment?.departmentId;
-    if (!deptId) return all.filter((d) => d.status !== 'INACTIVE');
-    return all.filter((d) => d.departmentId === deptId && d.status !== 'INACTIVE');
-  }, [org.designations, draft?.employment?.departmentId]);
 
   async function openPerson(kind, id) {
     setSaving(true);
@@ -926,27 +911,10 @@ export function EmployeeMasterPage() {
                         </select>
                       </Field>
                       <Field label="Department">
-                        <select value={draft.employment.departmentId} onChange={(e) => {
-                          const dept = org.departments.find((item) => item.id === e.target.value);
-                          setDraft((current) => ({
-                            ...current,
-                            employment: {
-                              ...current.employment,
-                              departmentId: e.target.value,
-                              department: dept?.name || '',
-                              designationId: '',
-                            },
-                          }));
-                        }}>
-                          <option value="">Select</option>
-                          {org.departments.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-                        </select>
+                        <input maxLength={100} value={draft.employment.department} onChange={(e) => patch('employment', 'department', e.target.value)} />
                       </Field>
                       <Field label="Designation">
-                        <select value={draft.employment.designationId} onChange={(e) => patch('employment', 'designationId', e.target.value)}>
-                          <option value="">Select</option>
-                          {designations.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-                        </select>
+                        <input maxLength={150} value={draft.employment.title} onChange={(e) => patch('employment', 'title', e.target.value)} />
                       </Field>
                       <Field label="Job role"><input value={draft.employment.jobRole} onChange={(e) => patch('employment', 'jobRole', e.target.value)} /></Field>
                       <Field label="Grade"><input value={draft.employment.grade} onChange={(e) => patch('employment', 'grade', e.target.value)} /></Field>
