@@ -306,6 +306,12 @@ export function BgtSalaryPayoutSheet() {
           noOfDays: num(p.noOfDays),
           lops: num(p.lops),
           presentDays: num(p.presentDays),
+          leaveClDays: num(p.leaveClDays),
+          leaveElDays: num(p.leaveElDays),
+          leaveSlDays: num(p.leaveSlDays),
+          leaveClBalance: num(p.leaveClBalance),
+          leaveElBalance: num(p.leaveElBalance),
+          leaveSlBalance: num(p.leaveSlBalance),
           basic: num(p.basic),
           retention: num(p.retention),
           hra: num(p.hra),
@@ -642,6 +648,32 @@ export function BgtSalaryPayoutSheet() {
                       value={pay.presentDays}
                       onChange={(v) => patchPayout(selectedRow.personId, { presentDays: v }, false)}
                     />
+                  </label>
+                  <div className="bgt-payout-leave-heading">Availed Leaves</div>
+                  <label className="field">
+                    <span>CL</span>
+                    <DaysInput value={pay.leaveClDays} onChange={(v) => patchPayout(selectedRow.personId, { leaveClDays: v }, false)} />
+                  </label>
+                  <label className="field">
+                    <span>EL</span>
+                    <DaysInput value={pay.leaveElDays} onChange={(v) => patchPayout(selectedRow.personId, { leaveElDays: v }, false)} />
+                  </label>
+                  <label className="field">
+                    <span>SL</span>
+                    <DaysInput value={pay.leaveSlDays} onChange={(v) => patchPayout(selectedRow.personId, { leaveSlDays: v }, false)} />
+                  </label>
+                  <div className="bgt-payout-leave-heading">Leave Balance</div>
+                  <label className="field">
+                    <span>CL</span>
+                    <DaysInput value={pay.leaveClBalance} onChange={(v) => patchPayout(selectedRow.personId, { leaveClBalance: v }, false)} />
+                  </label>
+                  <label className="field">
+                    <span>EL</span>
+                    <DaysInput value={pay.leaveElBalance} onChange={(v) => patchPayout(selectedRow.personId, { leaveElBalance: v }, false)} />
+                  </label>
+                  <label className="field">
+                    <span>SL</span>
+                    <DaysInput value={pay.leaveSlBalance} onChange={(v) => patchPayout(selectedRow.personId, { leaveSlBalance: v }, false)} />
                   </label>
                   <label className="field">
                     <span>Basic (prorated)</span>

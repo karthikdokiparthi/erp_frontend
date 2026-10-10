@@ -4179,6 +4179,16 @@ button.page-tab {
   min-width: 0;
 }
 
+.bgt-payout-leave-heading {
+  margin-top: 4px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .bgt-payout-fields .field input {
   width: 100%;
   box-sizing: border-box;
