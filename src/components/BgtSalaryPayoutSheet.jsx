@@ -97,7 +97,8 @@ function recomputePayout(p) {
   const retention = num(p.retention);
   const hra = num(p.hra);
   const flexi = num(p.flexi);
-  const netSalary = Math.round((basic + retention + hra + flexi) * 100) / 100;
+  const bonus = num(p.bonus);
+  const netSalary = Math.round((basic + retention + hra + flexi + bonus) * 100) / 100;
   const lessPfEe = num(p.lessPfEe);
   const lessPt = num(p.lessPt);
   const lessTds = num(p.lessTds);
@@ -316,6 +317,7 @@ export function BgtSalaryPayoutSheet() {
           retention: num(p.retention),
           hra: num(p.hra),
           flexi: num(p.flexi),
+          bonus: num(p.bonus),
           netSalary: num(p.netSalary),
           lessPfEe: num(p.lessPfEe),
           lessPt: num(p.lessPt),
@@ -701,6 +703,13 @@ export function BgtSalaryPayoutSheet() {
                     <NumInput
                       value={pay.flexi}
                       onChange={(v) => patchPayout(selectedRow.personId, { flexi: v })}
+                    />
+                  </label>
+                  <label className="field">
+                    <span>Bonus</span>
+                    <NumInput
+                      value={pay.bonus}
+                      onChange={(v) => patchPayout(selectedRow.personId, { bonus: v })}
                     />
                   </label>
                   <label className="field">
