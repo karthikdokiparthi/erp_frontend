@@ -718,6 +718,22 @@ export function AttendancePage() {
     };
   }, [viewMode, selectedDate, period.from, period.to, workGroup]);
 
+  useEffect(() => {
+    const events = new EventSource('/api/hr/attendance/events', { withCredentials: true });
+    const refreshAttendance = () => {
+      setNotice('Biometric ID updated. Attendance refreshed.');
+      if (viewMode === 'monthly') {
+        void loadMonthly(period.from, period.to, { silent: true });
+      } else {
+        void loadBoard(selectedDate, { silent: true });
+      }
+    };
+    events.addEventListener('biometric-mapping', refreshAttendance);
+    return () => {
+      events.removeEventListener('biometric-mapping', refreshAttendance);
+      events.close();
+    };
+  }, [viewMode, selectedDate, period.from, period.to, workGroup]);
   async function syncNow() {
     if (!canSyncBio) {
       setError('Use Upload IAS Excel for this column — BioAPI Sync is only for BGT / All.');
